@@ -42,7 +42,7 @@ export const Header = () => {
             Bem vindo
           </p>
           <DividerArrow />
-          <p className="text-[#6A6A6A]">Registro</p>
+          <p className="text-[#6A6A6A] font-medoim text-sm">Registro</p>
         </div>
       </div>
     </header>
