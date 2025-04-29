@@ -1,7 +1,9 @@
+import { StatusBar } from "./status-bar";
+
 export default function Home() {
   return (
     <main className="bg-slate-200">
-      <h1>queijo</h1>
+      <StatusBar />
     </main>
   );
 }
