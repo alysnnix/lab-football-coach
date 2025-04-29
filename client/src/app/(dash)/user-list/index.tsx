@@ -1,9 +1,7 @@
 export const UserList = () => {
   return (
-    <div>
-      <h1>
-        Usuários
-      </h1>
+    <div className="py-6 px-ui-dash-desktop">
+      <h1>Usuários</h1>
     </div>
-  )
-}
+  );
+};

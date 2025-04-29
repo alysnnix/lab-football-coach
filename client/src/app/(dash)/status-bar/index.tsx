@@ -20,7 +20,7 @@ const Item = ({ title, icon, value }: ItemProps) => {
 
 export const StatusBar = () => {
   return (
-    <div className="bg-ui-primary flex flex-col sm:flex-row gap-[49px] p-6 px-dash-desktop">
+    <div className="bg-ui-primary flex flex-col sm:flex-row gap-[49px] p-6 px-ui-dash-desktop">
       {data.map((item) => (
         <Item key={item.id} title={item.title} icon={<item.Icon />} value={item.value} />
       ))}
