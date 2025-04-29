@@ -22,6 +22,20 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Sensedia Football Coach Challenge",
   description: "Challenge to create a football coach app",
+  icons: {
+    icon: [
+      {
+        media: '(prefers-color-scheme: dark)',
+        url: "/assets/favicon/dark.svg",
+        href: "/assets/favicon/dark.svg",
+      },
+      {
+        media: '(prefers-color-scheme: light)',
+        url: "/assets/favicon/light.svg",
+        href: "/assets/favicon/light.svg",
+      },
+    ]
+  }
 };
 
 export default function RootLayout({
