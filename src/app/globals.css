@@ -14,6 +14,8 @@
   --color-ui-tertiary: var(--ui-tertiary);
 
   --font-montserrat: "Montserrat", sans-serif;
+
+  --spacing-dash-desktop: 18.16%;
 }
 
 * {
