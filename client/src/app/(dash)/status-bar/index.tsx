@@ -1,11 +1,11 @@
-import React from "react"
-import { data } from "./data"
+import React from "react";
+import { data } from "./data";
 
 type ItemProps = {
-  title: string
-  icon: React.ReactNode
-  value: string | number
-}
+  title: string;
+  icon: React.ReactNode;
+  value: string | number;
+};
 const Item = ({ title, icon, value }: ItemProps) => {
   return (
     <div className="flex gap-3 items-center text-white cursor-default">
@@ -15,15 +15,20 @@ const Item = ({ title, icon, value }: ItemProps) => {
         <span className="text-md">{value}</span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const StatusBar = () => {
   return (
-    <div className="bg-ui-primary flex flex-col sm:flex-row gap-[49px] p-6 px-ui-dash-desktop">
+    <div className="bg-ui-primary flex flex-col lg:flex-row gap-[49px] p-6 px-ui-dash">
       {data.map((item) => (
-        <Item key={item.id} title={item.title} icon={<item.Icon />} value={item.value} />
+        <Item
+          key={item.id}
+          title={item.title}
+          value={item.value}
+          icon={<item.Icon className="w-[50px] h-[52px]" />}
+        />
       ))}
     </div>
-  )
-}
+  );
+};
