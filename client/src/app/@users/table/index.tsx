@@ -3,10 +3,10 @@ import { Delete } from "./delete";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
 
 type Props = {
-  data: GetUsersResponseDto;
+  users: GetUsersResponseDto;
 };
 
-export const Table = ({ data }: Props) => {
+export const Table = ({ users }: Props) => {
   return (
     <div className={cn("dash-table overflow-x-auto overflow-y-hidden")}>
       <table className="w-full sm:text-left rounded-sm">
@@ -24,7 +24,7 @@ export const Table = ({ data }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {data?.data.map((user) => (
+          {users?.data.map((user) => (
             <tr
               key={user.id}
               className="mb-4 border-b hover:bg-ui-accent text-nowrap">

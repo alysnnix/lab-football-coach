@@ -1,3 +1,6 @@
+"use client"; // Add this directive if using Next.js App Router
+
+import { GetUsersResponseDto } from "@/app/api/users/dto"; // Assuming this path is correct
 import {
   Pagination as PaginationContainer,
   PaginationContent,
@@ -17,86 +20,242 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 
-const PageSelector = () => {
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import React, { useMemo } from "react";
+
+const DOTS = "...";
+
+const generatePaginationRange = (
+  currentPage: number,
+  totalPages: number,
+  siblingCount = 1
+): (number | string)[] => {
+  const totalPageNumbers = siblingCount + 5;
+
+  if (totalPageNumbers >= totalPages) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+  const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+
+  const shouldShowLeftDots = leftSiblingIndex > 2;
+  const shouldShowRightDots = rightSiblingIndex < totalPages - 1;
+
+  const firstPageIndex = 1;
+  const lastPageIndex = totalPages;
+
+  if (!shouldShowLeftDots && shouldShowRightDots) {
+    const leftItemCount = 3 + 2 * siblingCount;
+    const leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1);
+
+    return [...leftRange, DOTS, totalPages];
+  }
+
+  if (shouldShowLeftDots && !shouldShowRightDots) {
+    const rightItemCount = 3 + 2 * siblingCount;
+    const rightRange = Array.from(
+      { length: rightItemCount },
+      (_, i) => totalPages - rightItemCount + i + 1
+    );
+    return [firstPageIndex, DOTS, ...rightRange];
+  }
+
+  if (shouldShowLeftDots && shouldShowRightDots) {
+    const middleRange = Array.from(
+      { length: rightSiblingIndex - leftSiblingIndex + 1 },
+      (_, i) => leftSiblingIndex + i
+    );
+    return [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
+  }
+
+  return Array.from({ length: totalPages }, (_, i) => i + 1);
+};
+
+type PageSelectorProps = {
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
+
+const PageSelector = ({
+  totalPages,
+  currentPage,
+  onPageChange,
+}: PageSelectorProps) => {
+  const handleValueChange = (value: string) => {
+    const page = parseInt(value, 10);
+    if (!isNaN(page)) {
+      onPageChange(page);
+    }
+  };
+
   return (
-    <Select>
-      <SelectTrigger className="shadow-none border-b-2 border-ui-gray-medium-light rounded-none">
-        <SelectValue placeholder="1" />
+    <Select value={String(currentPage)} onValueChange={handleValueChange}>
+      <SelectTrigger className="shadow-none border-b-2 border-ui-gray-medium-light rounded-none w-[60px]">
+        <SelectValue placeholder={String(currentPage)} />
       </SelectTrigger>
       <SelectContent position="item-aligned">
         <SelectGroup>
-          <SelectItem value="1">1</SelectItem>
-          <SelectItem value="2">2</SelectItem>
-          <SelectItem value="3">3</SelectItem>
-          <SelectItem value="4">4</SelectItem>
-          <SelectItem value="5">5</SelectItem>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <SelectItem key={page} value={String(page)}>
+              {page}
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
   );
 };
 
-const ChangePage = () => {
+type ChangePageProps = {
+  currentPage: number;
+  totalPages: number;
+  generatePageUrl: (page: number) => string;
+};
+
+const ChangePage = ({
+  currentPage,
+  totalPages,
+  generatePageUrl,
+}: ChangePageProps) => {
+  const paginationRange = useMemo(
+    () => generatePaginationRange(currentPage, totalPages),
+    [currentPage, totalPages]
+  );
+
+  if (totalPages <= 1) {
+    return null;
+  }
+
   return (
     <PaginationContainer>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            href={generatePageUrl(currentPage - 1)}
+            aria-disabled={currentPage === 1}
+            tabIndex={currentPage === 1 ? -1 : undefined}
+            className={
+              currentPage === 1 ? "pointer-events-none opacity-50" : undefined
+            }
+          />
         </PaginationItem>
+
+        {paginationRange.map((pageNumber, index) => {
+          if (pageNumber === DOTS) {
+            return <PaginationEllipsis key={DOTS + index} />;
+          }
+
+          return (
+            <PaginationItem key={pageNumber}>
+              <PaginationLink
+                href={generatePageUrl(pageNumber as number)}
+                isActive={currentPage === pageNumber}
+                aria-current={currentPage === pageNumber ? "page" : undefined}>
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        })}
+
         <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationEllipsis />
-        <PaginationItem>
-          <PaginationLink href="#" preActive>2</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            3
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" afterActive>4</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">5</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext
+            href={generatePageUrl(currentPage + 1)}
+            aria-disabled={currentPage === totalPages}
+            tabIndex={currentPage === totalPages ? -1 : undefined}
+            className={
+              currentPage === totalPages
+                ? "pointer-events-none opacity-50"
+                : undefined
+            }
+          />
         </PaginationItem>
       </PaginationContent>
     </PaginationContainer>
   );
 };
 
-const TotalInfo = () => {
+type TotalInfoProps = {
+  total: number;
+};
+const TotalInfo = ({ total }: TotalInfoProps) => {
   return (
     <span className="text-xs uppercase text-nowrap text-ui-gray-medium font-medium">
-      Total: 100
+      Total: {total}
     </span>
   );
 };
 
-const GoToNextPage = () => {
+type GoToNextPageProps = {
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
+const GoToNextPage = ({
+  totalPages,
+  currentPage,
+  onPageChange,
+}: GoToNextPageProps) => {
+  if (totalPages <= 1) return null;
+
   return (
-    <div className="grid grid-cols-2 gap-2 items-center">
-      <span className="text-xs uppercase text-ui-gray-medium font-medium">
+    <div className="grid grid-cols-[auto_min-content] gap-2 items-center">
+      <span className="text-xs uppercase text-ui-gray-medium font-medium text-right">
         Ir para a página
       </span>
-      <PageSelector />
+      <PageSelector
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };
 
-export const Pagination = () => {
+type Props = {
+  pagination: GetUsersResponseDto["pagination"];
+};
+
+export const Pagination = ({ pagination }: Props) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const { totalPages } = pagination;
+
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(pageNumber));
+    return `${pathname}?${params.toString()}`;
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      const url = createPageURL(page);
+      router.push(url);
+    }
+  };
+
+  const validatedCurrentPage = Math.max(
+    1,
+    Math.min(currentPage, totalPages || 1)
+  );
+
   return (
-    <div className="flex relative justify-between items-center">
-      <TotalInfo />
-      <ChangePage />
-      <GoToNextPage />
+    <div className="flex flex-wrap gap-4 relative justify-between items-center">
+      <TotalInfo total={pagination.totalItems} />
+      <ChangePage
+        currentPage={validatedCurrentPage}
+        totalPages={totalPages}
+        generatePageUrl={createPageURL}
+      />
+      <GoToNextPage
+        totalPages={totalPages}
+        currentPage={validatedCurrentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

@@ -1,31 +1,30 @@
-import {Table} from "./table";
-import {Search} from "./search";
-import {Pagination} from "./pagination";
-import {NotUserFound} from "./not-found";
-import {GetUsersResponseDto} from "@/app/api/users/dto";
-import {bff} from "@/service/bff";
+import { Table } from "./table";
+import { Search } from "./search";
+import { Pagination } from "./pagination";
+import { NotUserFound } from "./not-found";
+import { GetUsersResponseDto } from "@/app/api/users/dto";
+import { bff } from "@/service/bff";
 
 interface UserListProps {
-  searchParams: Promise<{[key: string]: string | string[] | undefined}>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export const Page = async ({searchParams}: UserListProps) => {
+export const Page = async ({ searchParams }: UserListProps) => {
   const search = (await searchParams).q;
-  const page = (await searchParams).page;
-  const limit = (await searchParams).limit;
+  const page = (await searchParams).page || 1;
 
-  const data = await bff
+  const users = await bff
     .get<GetUsersResponseDto>(`/api/users`, {
       params: {
         q: search,
         page: page,
-        limit: limit,
+        limit: 5,
       },
     })
     .then((res) => res.data)
     .catch(() => null);
 
-  if (!data) {
+  if (!users) {
     return <NotUserFound />;
   }
 
@@ -33,8 +32,8 @@ export const Page = async ({searchParams}: UserListProps) => {
     <div className="px-ui-dash py-6 bg-ui-background flex flex-col gap-6">
       <h2 className="text-2xl text-ui-gray-100">Usuarios</h2>
       <Search />
-      <Table data={data} />
-      <Pagination />
+      <Table users={users} />
+      <Pagination pagination={users.pagination} />
     </div>
   );
 };
