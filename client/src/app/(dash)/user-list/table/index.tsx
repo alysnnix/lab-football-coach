@@ -4,7 +4,7 @@ import { GetUsersResponseDto } from "@/app/api/users/dto";
 
 type Props = {
   data: GetUsersResponseDto[];
-}
+};
 export const Table = ({ data }: Props) => {
   return (
     <div className={cn("dash-table overflow-x-auto overflow-y-hidden")}>
@@ -27,15 +27,11 @@ export const Table = ({ data }: Props) => {
             <tr
               key={user.id}
               className="mb-4 border-b hover:bg-ui-accent text-nowrap">
-              <td className="py-6 px-2 ">{user.id.split('-')[0]}</td>
-              <td className="py-6 px-2 truncate max-w-[150px]" title={user.name}>
-                {user.name}
-              </td>
+              <td className="py-6 px-2 ">{user.id.split("-")[0]}</td>
+              <td className="py-6 px-2 truncate max-w-[150px]">{user.name}</td>
               <td className="py-6 px-2 truncate max-w-[200px]">{user.email}</td>
-              <td className="py-6 px-2 truncate max-w-[150px]" title={user.city}>
-                {user.city}
-              </td>
-              <td className="py-6 px-2 truncate max-w-[150px]" title={user.days_of_week}>
+              <td className="py-6 px-2 truncate max-w-[150px]">{user.city}</td>
+              <td className="py-6 px-2 truncate max-w-[150px]">
                 {user.days_of_week}
               </td>
               <td className="py-6 px-2">{user.posts}</td>
