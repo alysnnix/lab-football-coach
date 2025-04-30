@@ -3,8 +3,9 @@ import { Delete } from "./delete";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
 
 type Props = {
-  data: GetUsersResponseDto[];
+  data: GetUsersResponseDto;
 };
+
 export const Table = ({ data }: Props) => {
   return (
     <div className={cn("dash-table overflow-x-auto overflow-y-hidden")}>
@@ -23,11 +24,11 @@ export const Table = ({ data }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((user) => (
+          {data?.data.map((user) => (
             <tr
               key={user.id}
               className="mb-4 border-b hover:bg-ui-accent text-nowrap">
-              <td className="py-6 px-2 ">{user.id.split("-")[0]}</td>
+              <td className="py-6 px-2 font-bold">{user.id.split("-")[0]}</td>
               <td className="py-6 px-2 truncate max-w-[150px]">{user.name}</td>
               <td className="py-6 px-2 truncate max-w-[200px]">{user.email}</td>
               <td className="py-6 px-2 truncate max-w-[150px]">{user.city}</td>

@@ -4,8 +4,15 @@ import { Pagination } from "./pagination";
 import { NotUserFound } from "./not-found";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
 
-export const UserList = async () => {
-  const data: GetUsersResponseDto[] = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/users")
+interface UserListProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export const Page = async ({ searchParams }: UserListProps) => {
+  const limit = (await searchParams).limit;
+  const page = (await searchParams).page;
+
+  const data: GetUsersResponseDto = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/users?page=${page}&limit=${limit}`)
     .then((res) => res.json())
     .catch((err) => {
       console.error("Error fetching users:", err);
@@ -13,9 +20,7 @@ export const UserList = async () => {
 
 
   if (!data) {
-    return (
-      <NotUserFound />
-    )
+    return <NotUserFound />;
   }
 
   return (
@@ -27,3 +32,5 @@ export const UserList = async () => {
     </div>
   );
 };
+
+export default Page;

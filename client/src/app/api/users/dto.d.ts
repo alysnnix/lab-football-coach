@@ -2,14 +2,24 @@ export type ApiResponse = {
   users: ResponseDto[];
 };
 
-export type GetUsersResponseDto = {
+type Data = {
   id: string;
   name: string;
   email: string;
-  city: string;
-  days_of_week: string;
   posts: number;
   albums: number;
   created_at: string;
   updated_at: string;
+  city: string;
+  days_of_week: string;
+}
+
+export type GetUsersResponseDto = {
+  data: Data[],
+  pagination: {
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+  },
 };
