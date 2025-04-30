@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -34,6 +34,8 @@ type PaginationLinkProps = {
   isActive?: boolean;
   preActive?: boolean;
   afterActive?: boolean;
+  firstItem?: boolean;
+  lastItem?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
   React.ComponentProps<"a">;
 
@@ -43,6 +45,8 @@ function PaginationLink({
   preActive,
   afterActive,
   size = "icon",
+  firstItem,
+  lastItem,
   ...props
 }: PaginationLinkProps) {
   return (
@@ -60,6 +64,8 @@ function PaginationLink({
         "border hover:bg-ui-gray-medium-light/90 hover:text-white border-ui-gray-medium-light bg-ui-gray-medium-light text-white rounded-none",
         preActive && "border border-ui-gray-medium-light rounded-r-none -mr-2",
         afterActive && "border border-ui-gray-medium-light rounded-l-none ml-0",
+        firstItem && "rounded-l-full",
+        lastItem && "rounded-r-full",
         className
       )}
       {...props}
@@ -80,7 +86,7 @@ function PaginationPrevious({
         className
       )}
       {...props}>
-      <span className="hidden sm:block">Previous</span>
+      <span className="hidden sm:block">Anterior</span>
     </PaginationLink>
   );
 }
@@ -95,8 +101,7 @@ function PaginationNext({
       size="default"
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
       {...props}>
-      <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon />
+      <span className="hidden sm:block">Próximo</span>
     </PaginationLink>
   );
 }

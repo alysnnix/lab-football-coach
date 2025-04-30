@@ -152,6 +152,10 @@ const ChangePage = ({
               <PaginationLink
                 href={generatePageUrl(pageNumber as number)}
                 isActive={currentPage === pageNumber}
+                firstItem={pageNumber === 1}
+                lastItem={pageNumber === totalPages}
+                preActive={pageNumber === currentPage - 1}
+                afterActive={pageNumber === currentPage + 1}
                 aria-current={currentPage === pageNumber ? "page" : undefined}>
                 {pageNumber}
               </PaginationLink>
