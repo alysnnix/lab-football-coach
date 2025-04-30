@@ -1,31 +1,29 @@
-import { Table } from "./table";
-import { Search } from "./search";
-import { Pagination } from "./pagination";
-import { NotUserFound } from "./not-found";
-import { GetUsersResponseDto } from "@/app/api/users/dto";
-import { bff } from "@/service/bff";
+import {Table} from "./table";
+import {Search} from "./search";
+import {Pagination} from "./pagination";
+import {NotUserFound} from "./not-found";
+import {GetUsersResponseDto} from "@/app/api/users/dto";
+import {bff} from "@/service/bff";
 
 interface UserListProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }
 
-export const Page = async ({ searchParams }: UserListProps) => {
+export const Page = async ({searchParams}: UserListProps) => {
   const search = (await searchParams).q;
   const page = (await searchParams).page;
   const limit = (await searchParams).limit;
 
-  const data: GetUsersResponseDto = await bff
-    .get(`/api/users`, {
+  const data = await bff
+    .get<GetUsersResponseDto>(`/api/users`, {
       params: {
+        q: search,
         page: page,
         limit: limit,
-        q: search,
       },
     })
     .then((res) => res.data)
-    .catch((err) => {
-      console.error("Error fetching users:", err);
-    });
+    .catch(() => null);
 
   if (!data) {
     return <NotUserFound />;
