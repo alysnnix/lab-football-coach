@@ -2,7 +2,16 @@ import { Table } from "./table";
 import { Search } from "./search";
 import { Pagination } from "./pagination";
 
-export const UserList = () => {
+export const UserList = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/users")
+    .then((res) => res.json())
+    .catch((err) => {
+      console.log(err);
+    });
+
+  console.log(res)
+
   return (
     <div className="px-ui-dash py-6 bg-ui-background flex flex-col gap-6">
       <h2 className="text-2xl text-ui-gray-100">Usuarios</h2>
