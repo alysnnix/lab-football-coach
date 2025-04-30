@@ -1,0 +1,22 @@
+@keyframes show {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.app :global(.dash-table table tbody tr:hover > td[data-action="delete"]) {
+  animation: show 0.2s ease forwards;
+}
+
+.app :global(.dash-table table tbody tr:last-child) {
+  border-bottom: none;
+}
