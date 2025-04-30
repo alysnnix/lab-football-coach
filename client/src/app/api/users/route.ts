@@ -1,3 +1,5 @@
+import { ApiResponse, GetUsersResponseDto } from "./dto";
+
 const mock = {
   cities: [
     "New York",
@@ -19,22 +21,6 @@ const mock = {
   ],
 };
 
-type ApiResponse = {
-  users: ResponseDto[];
-};
-
-type ResponseDto = {
-  id: string;
-  name: string;
-  email: string;
-  city: string;
-  days_of_week: string;
-  posts: number;
-  albums: number;
-  created_at: string;
-  updated_at: string;
-};
-
 const getValue = (length: number) => {
   const randomValue = Math.floor(Math.random() * length);
   return randomValue;
@@ -50,7 +36,10 @@ export async function GET() {
   }
 
   const usersFromApi: ApiResponse = await response.json();
-  const users: ResponseDto[] = usersFromApi?.users.map((user: ResponseDto) => {
+
+  throw new Error("Error: This is a mock API. Please use the real API.");
+
+  const users: GetUsersResponseDto[] = usersFromApi?.users.map((user: GetUsersResponseDto) => {
     const randomCity = mock.cities[getValue(mock.cities.length)];
     const randomDaysOfWeek = mock.daysOfWeek[getValue(mock.daysOfWeek.length)];
 
