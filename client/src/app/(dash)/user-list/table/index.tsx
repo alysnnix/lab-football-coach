@@ -48,6 +48,7 @@ export const Table = () => {
             <th className="py-3 px-2 font-bold">Posts</th>
             <th className="py-3 px-2 font-bold">Albuns</th>
             <th className="py-3 px-2 font-bold w-[30px]" />
+            <th className="py-3 px-2 font-bold w-[30px]" />
           </tr>
         </thead>
         <tbody>
@@ -62,9 +63,8 @@ export const Table = () => {
               <td className="py-6 px-2">{user.dias}</td>
               <td className="py-6 px-2">{user.posts}</td>
               <td className="py-6 px-2">{user.albuns}</td>
-              <td data-action="delete" className="py-6 ">
-                <Delete />
-              </td>
+              <Delete />
+              <td className="py-6 px-2" />
             </tr>
           ))}
         </tbody>
