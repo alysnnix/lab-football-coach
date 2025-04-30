@@ -10,23 +10,21 @@ import {
 
 import {
   Select,
-  SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
-  SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectTrigger,
+  SelectContent,
 } from "@/components/ui/select";
 
 const PageSelector = () => {
   return (
     <Select>
       <SelectTrigger className="shadow-none border-b-2 border-ui-gray-medium-light rounded-none">
-        <SelectValue placeholder="Select a fruit" />
+        <SelectValue placeholder="1" />
       </SelectTrigger>
       <SelectContent position="item-aligned">
         <SelectGroup>
-          <SelectLabel>Fruits</SelectLabel>
           <SelectItem value="1">1</SelectItem>
           <SelectItem value="2">2</SelectItem>
           <SelectItem value="3">3</SelectItem>
@@ -48,13 +46,20 @@ const ChangePage = () => {
         <PaginationItem>
           <PaginationLink href="#">1</PaginationLink>
         </PaginationItem>
+        <PaginationEllipsis />
+        <PaginationItem>
+          <PaginationLink href="#" preActive>2</PaginationLink>
+        </PaginationItem>
         <PaginationItem>
           <PaginationLink href="#" isActive>
-            2
+            3
           </PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
+          <PaginationLink href="#" afterActive>4</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">5</PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationEllipsis />
