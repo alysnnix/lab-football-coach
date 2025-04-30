@@ -36,9 +36,6 @@ export async function GET() {
   }
 
   const usersFromApi: ApiResponse = await response.json();
-
-  throw new Error("Error: This is a mock API. Please use the real API.");
-
   const users: GetUsersResponseDto[] = usersFromApi?.users.map((user: GetUsersResponseDto) => {
     const randomCity = mock.cities[getValue(mock.cities.length)];
     const randomDaysOfWeek = mock.daysOfWeek[getValue(mock.daysOfWeek.length)];
