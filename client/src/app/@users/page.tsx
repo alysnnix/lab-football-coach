@@ -3,21 +3,29 @@ import { Search } from "./search";
 import { Pagination } from "./pagination";
 import { NotUserFound } from "./not-found";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
+import { bff } from "@/service/bff";
 
 interface UserListProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export const Page = async ({ searchParams }: UserListProps) => {
-  const limit = (await searchParams).limit;
+  const search = (await searchParams).q;
   const page = (await searchParams).page;
+  const limit = (await searchParams).limit;
 
-  const data: GetUsersResponseDto = await fetch(process.env.NEXT_PUBLIC_API_URL + `/api/users?page=${page}&limit=${limit}`)
-    .then((res) => res.json())
+  const data: GetUsersResponseDto = await bff
+    .get(`/api/users`, {
+      params: {
+        page: page,
+        limit: limit,
+        q: search,
+      },
+    })
+    .then((res) => res.data)
     .catch((err) => {
       console.error("Error fetching users:", err);
     });
-
 
   if (!data) {
     return <NotUserFound />;
