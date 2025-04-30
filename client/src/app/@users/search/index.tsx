@@ -1,31 +1,52 @@
 "use client";
 
-import {SearchIcon} from "lucide-react";
-import {useQueryState} from "nuqs";
+import { cn } from "@/lib/utils";
+import { useTransition } from "react";
+import { SearchIcon } from "lucide-react";
+import { Spinner } from "@/components/shared/spinner";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export const Search = () => {
-  const [search, setSearch] = useQueryState("q", {defaultValue: ""});
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const searchValue = formData.get("search") as string;
-    setSearch(searchValue);
-  };
+  const searchParams = useSearchParams();
+  const search = searchParams.get("q") || "";
+
+  function searchAction(formData: FormData) {
+    if (isPending) return;
+
+    const value = formData.get("q") as string;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("q", value);
+    startTransition(() => {
+      router.replace(`/?${params.toString()}`);
+    });
+  }
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="h-[40px] flex items-center px-3 bg-ui-accent rounded-t-sm border-b border-ui-gray-medium-light">
+      action={searchAction}
+      className={cn(
+        "h-[40px] flex items-center px-3 bg-ui-accent rounded-t-sm border-b border-ui-gray-medium-light",
+        isPending && "opacity-50"
+      )}>
       <input
+        name="q"
         type="text"
-        name="search"
         placeholder="Buscar"
         defaultValue={search}
         className="h-full text-md w-full border-none outline-none"
       />
-      <button type="submit" className="cursor-pointer">
-        <SearchIcon className="text-[#919191] w-[18px] h-[18px]" />
+      <button
+        type="submit"
+        disabled={isPending}
+        className="cursor-pointer relative">
+        {isPending ? (
+          <Spinner />
+        ) : (
+          <SearchIcon className="text-[#919191] w-[18px] h-[18px]" />
+        )}
       </button>
     </form>
   );
