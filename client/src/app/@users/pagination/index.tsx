@@ -19,9 +19,10 @@ import {
   SelectTrigger,
   SelectContent,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import React, { useMemo } from "react";
+import React, { useMemo, useTransition } from "react";
 
 const DOTS = "...";
 
@@ -222,6 +223,8 @@ type Props = {
 };
 
 export const Pagination = ({ pagination }: Props) => {
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -232,13 +235,16 @@ export const Pagination = ({ pagination }: Props) => {
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", String(pageNumber));
+
     return `${pathname}?${params.toString()}`;
   };
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       const url = createPageURL(page);
-      router.push(url);
+      startTransition(() => {
+        router.push(url);
+      });
     }
   };
 
@@ -248,7 +254,11 @@ export const Pagination = ({ pagination }: Props) => {
   );
 
   return (
-    <div className="flex flex-wrap gap-4 relative justify-between items-center">
+    <div
+      className={cn(
+        "flex flex-wrap gap-4 relative justify-between items-center",
+        isPending && "opacity-50 pointer-none"
+      )}>
       <TotalInfo total={pagination.totalItems} />
       <ChangePage
         currentPage={validatedCurrentPage}
