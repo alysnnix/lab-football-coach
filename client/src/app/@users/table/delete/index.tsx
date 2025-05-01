@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Trash } from "lucide-react";
+import {Trash} from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -12,22 +12,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { deleteUserAction } from "./action";
+import {Button} from "@/components/ui/button";
+import {deleteUserAction} from "./action";
+import {toast} from "sonner";
 
 type Props = {
   id: string;
 };
 
-export const Delete = ({ id }: Props) => {
+export const Delete = ({id}: Props) => {
   const [open, setOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     startTransition(() => {
-      deleteUserAction(id);
-      setOpen(false);
+      try {
+        deleteUserAction(id);
+        toast("Usuário excluído com sucesso!");
+      } catch {
+        toast.error("Erro ao excluir usuário.");
+      } finally {
+        setOpen(false);
+      }
     });
   };
 

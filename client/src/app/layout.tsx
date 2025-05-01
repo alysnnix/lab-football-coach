@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
+import type { Metadata } from "next";
 import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import { Toaster } from "sonner";
-import { NuqsAdapter } from "nuqs/adapters/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,8 +21,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Sensedia Football Coach Challenge",
-  description: "Challenge to create a football coach app",
+  title: "Football Coach",
+  description: "A football coach.",
   icons: {
     icon: [
       {
@@ -50,16 +49,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased h-full`}>
-        <NuqsAdapter>
-          <Toaster />
-          <Header />
-          <main>
-            {children}
-            {users}
-          </main>
-          <Footer />
-        </NuqsAdapter>
+        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased`}>
+        <Toaster />
+        <Header />
+        <main>
+          {children}
+          {users}
+        </main>
+        <Footer />
       </body>
     </html>
   );
