@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectContent,
 } from "@/components/ui/select";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -223,6 +224,7 @@ type Props = {
 };
 
 export const Pagination = ({ pagination }: Props) => {
+  const isMobile = useIsMobile();
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
@@ -243,7 +245,9 @@ export const Pagination = ({ pagination }: Props) => {
     if (page >= 1 && page <= totalPages) {
       const url = createPageURL(page);
       startTransition(() => {
-        router.push(url);
+        router.push(url, {
+          scroll: false,
+        });
       });
     }
   };
@@ -253,10 +257,23 @@ export const Pagination = ({ pagination }: Props) => {
     Math.min(currentPage, totalPages || 1)
   );
 
+  if (isMobile) {
+    return (
+      <div className="flex gap-4 relative justify-between items-center">
+        <TotalInfo total={pagination.totalItems} />
+        <GoToNextPage
+          totalPages={totalPages}
+          currentPage={validatedCurrentPage}
+          onPageChange={handlePageChange}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
-        "flex flex-wrap gap-4 relative justify-between items-center",
+        "flex gap-4 relative justify-between items-center",
         isPending && "opacity-50 pointer-none"
       )}>
       <TotalInfo total={pagination.totalItems} />
