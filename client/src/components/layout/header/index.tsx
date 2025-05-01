@@ -33,7 +33,7 @@ const DividerArrow = () => (
 
 export const Header = () => {
   return (
-    <header>
+    <header className="bg-ui-background">
       <MarkBar />
       <div className="px-6 flex items-center py-4">
         <div className="flex items-center gap-3">
@@ -42,7 +42,7 @@ export const Header = () => {
             Bem vindo
           </p>
           <DividerArrow />
-          <p className="text-[#6A6A6A] font-medoim text-sm">Registro</p>
+          <p className="text-[#6A6A6A] font-medium text-sm">Registro</p>
         </div>
       </div>
     </header>
