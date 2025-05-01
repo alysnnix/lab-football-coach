@@ -54,8 +54,10 @@ export default function RootLayout({
         <NuqsAdapter>
           <Toaster />
           <Header />
-          {children}
-          {users}
+          <main>
+            {children}
+            {users}
+          </main>
           <Footer />
         </NuqsAdapter>
       </body>
