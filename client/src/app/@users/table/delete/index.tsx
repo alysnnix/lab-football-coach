@@ -1,7 +1,6 @@
 "use client";
 
-import styles from "./delete.module.css";
-import { cn } from "@/lib/utils";
+import React from "react";
 import { Trash } from "lucide-react";
 import {
   Dialog,
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { deleteUserAction } from "./action";
-import React from "react";
 
 type Props = {
   id: string;
@@ -34,9 +32,7 @@ export const Delete = ({ id }: Props) => {
   };
 
   return (
-    <td
-      data-action="delete"
-      className={cn(styles.app, "py-6 opacity-0 overflow-hidden")}>
+    <td data-action="delete" className="py-6 opacity-0 overflow-hidden">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <button

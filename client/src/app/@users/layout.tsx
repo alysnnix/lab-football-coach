@@ -1,14 +1,15 @@
-import { Table } from "./table";
-import { NotUserFound } from "./not-found";
-import { GetUsersResponseDto } from "@/app/api/users/dto";
+import { Pagination } from "./pagination";
+import { GetUsersResponseDto } from "../api/users/dto";
+import { Search } from "./search";
 
-interface UserListProps {
+type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
-}
+  children: React.ReactNode;
+};
 
-export const Page = async ({ searchParams }: UserListProps) => {
-  const search = searchParams.q;
-  const page = searchParams.page || 1;
+export default async function UsersLayout({ children, searchParams }: Props) {
+  const search = searchParams?.q;
+  const page = searchParams?.page || 1;
   const limit = 5;
 
   const queryParams = new URLSearchParams();
@@ -42,10 +43,20 @@ export const Page = async ({ searchParams }: UserListProps) => {
   }
 
   if (!users) {
-    return <NotUserFound />;
+    return (
+      <div className="px-ui-dash py-6 bg-ui-background flex flex-col gap-6">
+        <h2 className="text-2xl text-ui-gray-100">Usuarios</h2>
+        <p className="text-ui-gray-200">No se encontraron usuarios.</p>
+      </div>
+    );
   }
 
-  return <Table users={users} />;
-};
-
-export default Page;
+  return (
+    <div className="px-ui-dash py-6 bg-ui-background flex flex-col gap-6">
+      <h2 className="text-2xl text-ui-gray-100">Usuarios</h2>
+      <Search />
+      {children}
+      <Pagination pagination={users.pagination} />
+    </div>
+  );
+}

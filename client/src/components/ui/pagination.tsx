@@ -3,6 +3,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -50,10 +51,11 @@ function PaginationLink({
   ...props
 }: PaginationLinkProps) {
   return (
-    <a
+    <Link
       aria-current={isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={isActive}
+      href={props.href ?? "#"}
       className={cn(
         buttonVariants({
           variant: "ghost",

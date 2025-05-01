@@ -13,10 +13,9 @@
   }
 }
 
-:global(.dash-table table tbody tr:hover > td[data-action="delete"]) {
+.app table tbody tr:hover > td[data-action="delete"] {
   animation: show 0.2s ease forwards;
 }
-
-:global(.dash-table table tbody tr:last-child) {
+.app table tbody tr:last-child {
   border-bottom: none;
 }

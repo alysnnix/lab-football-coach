@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Delete } from "./delete";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
+import styles from "./table.module.css";
 
 type Props = {
   users: GetUsersResponseDto;
@@ -8,7 +9,11 @@ type Props = {
 
 export const Table = ({ users }: Props) => {
   return (
-    <div className={cn("dash-table overflow-x-auto overflow-y-hidden")}>
+    <div
+      className={cn(
+        styles.app,
+        "dash-table overflow-x-auto overflow-y-hidden"
+      )}>
       <table className="w-full sm:text-left rounded-sm">
         <thead className="border-t border-b">
           <tr className="text-xs uppercase text-ui-gray-50 text-nowrap">

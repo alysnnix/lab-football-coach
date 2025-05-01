@@ -31,7 +31,7 @@ export const ChangePage = ({
   }
 
   return (
-    <PaginationContainer>
+    <PaginationContainer className="hidden md:flex">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

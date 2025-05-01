@@ -1,15 +1,28 @@
+import { useRouter } from "next/navigation";
 import { PageSelector } from "./page-selector";
 
 type GoToNextPageProps = {
   totalPages: number;
   currentPage: number;
-  onPageChange: (page: number) => void;
+  generatePageUrl: (page: number) => string;
 };
 export const GoToNextPage = ({
   totalPages,
   currentPage,
-  onPageChange,
+  generatePageUrl,
 }: GoToNextPageProps) => {
+
+  const router = useRouter();
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      const url = generatePageUrl(page);
+        router.push(url, {
+          scroll: false,
+        });
+    }
+  };
+
   if (totalPages <= 1) return null;
 
   return (
@@ -20,7 +33,7 @@ export const GoToNextPage = ({
       <PageSelector
         totalPages={totalPages}
         currentPage={currentPage}
-        onPageChange={onPageChange}
+        onPageChange={handlePageChange}
       />
     </div>
   );

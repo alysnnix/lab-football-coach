@@ -1,11 +1,10 @@
 "use client";
 
-import { GetUsersResponseDto } from "@/app/api/users/dto";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { GetUsersResponseDto } from "@/app/api/users/dto";
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import React, { useTransition } from "react";
+import React from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import { GoToNextPage } from "./next-page";
 import { TotalInfo } from "./total-page";
 import { ChangePage } from "./change-page";
@@ -15,10 +14,6 @@ type Props = {
 };
 
 export const Pagination = ({ pagination }: Props) => {
-  const isMobile = useIsMobile();
-  const [isPending, startTransition] = useTransition();
-
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -32,51 +27,23 @@ export const Pagination = ({ pagination }: Props) => {
     return `${pathname}?${params.toString()}`;
   };
 
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      const url = createPageURL(page);
-      startTransition(() => {
-        router.push(url, {
-          scroll: false,
-        });
-      });
-    }
-  };
-
   const validatedCurrentPage = Math.max(
     1,
     Math.min(currentPage, totalPages || 1)
   );
 
-  if (isMobile) {
-    return (
-      <div className="flex gap-4 relative justify-between items-center">
-        <TotalInfo total={pagination.totalItems} />
-        <GoToNextPage
-          totalPages={totalPages}
-          currentPage={validatedCurrentPage}
-          onPageChange={handlePageChange}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={cn(
-        "flex gap-4 relative justify-between items-center",
-        isPending && "opacity-50 pointer-none"
-      )}>
+    <div className={cn("flex gap-4 relative justify-between items-center")}>
       <TotalInfo total={pagination.totalItems} />
       <ChangePage
-        currentPage={validatedCurrentPage}
         totalPages={totalPages}
         generatePageUrl={createPageURL}
+        currentPage={validatedCurrentPage}
       />
       <GoToNextPage
         totalPages={totalPages}
+        generatePageUrl={createPageURL}
         currentPage={validatedCurrentPage}
-        onPageChange={handlePageChange}
       />
     </div>
   );
