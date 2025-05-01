@@ -3,26 +3,44 @@ import { Search } from "./search";
 import { Pagination } from "./pagination";
 import { NotUserFound } from "./not-found";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
-import { bff } from "@/service/bff";
 
 interface UserListProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export const Page = async ({ searchParams }: UserListProps) => {
-  const search = (await searchParams).q;
-  const page = (await searchParams).page || 1;
+  const search = searchParams.q;
+  const page = searchParams.page || 1;
+  const limit = 5;
 
-  const users = await bff
-    .get<GetUsersResponseDto>(`/api/users`, {
-      params: {
-        q: search,
-        page: page,
-        limit: 5,
+  const queryParams = new URLSearchParams();
+  if (search) {
+    queryParams.set("q", Array.isArray(search) ? search[0] : search);
+  }
+
+  queryParams.set("page", String(page));
+  queryParams.set("limit", String(limit));
+
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/users?${queryParams.toString()}`;
+
+  let users: GetUsersResponseDto | null = null;
+  try {
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
-    })
-    .then((res) => res.data)
-    .catch(() => null);
+      next: { tags: ["users-list"] },
+    });
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+    } else {
+      users = await response.json();
+    }
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+  }
 
   if (!users) {
     return <NotUserFound />;

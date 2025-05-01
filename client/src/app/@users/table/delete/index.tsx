@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { deleteUser } from "./delete";
+import { deleteUserAction } from "./action";
 import React from "react";
 
 type Props = {
@@ -28,8 +28,7 @@ export const Delete = ({ id }: Props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     startTransition(() => {
-      const formData = new FormData(event.currentTarget);
-      deleteUser(id, formData);
+      deleteUserAction(id);
       setOpen(false);
     });
   };
