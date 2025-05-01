@@ -7,7 +7,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 
-type PageSelectorProps = {
+export type PageSelectorProps = {
   totalPages: number;
   currentPage: number;
   onPageChange: (page: number) => void;
