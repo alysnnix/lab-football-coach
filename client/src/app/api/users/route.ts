@@ -1,5 +1,5 @@
-import {NextRequest, NextResponse} from "next/server";
-import {ApiResponse, GetUsersResponseDto} from "./dto";
+import { NextRequest, NextResponse } from "next/server";
+import { ApiResponse, GetUsersResponseDto } from "./dto";
 
 const mock = {
   cities: [
@@ -28,7 +28,7 @@ const getValue = (length: number) => {
 };
 
 export async function GET(request: NextRequest) {
-  const {searchParams} = request.nextUrl;
+  const { searchParams } = request.nextUrl;
 
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "10", 10);
@@ -40,8 +40,8 @@ export async function GET(request: NextRequest) {
 
   if (!response.ok) {
     return NextResponse.json(
-      {message: `Failed to fetch users: ${response.statusText}`},
-      {status: response.status}
+      { message: `Failed to fetch users: ${response.statusText}` },
+      { status: response.status }
     );
   }
 
@@ -90,4 +90,30 @@ export async function GET(request: NextRequest) {
   };
 
   return NextResponse.json(result);
+}
+
+export async function DELETE(request: NextRequest) {
+  const id = request.nextUrl.searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ message: "User ID is required" }, { status: 400 });
+  }
+
+  const response = await fetch(`${process.env.API_URL}/api/v1/users/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    return NextResponse.json(
+      { message: `Failed to delete user: ${response.statusText}` },
+      { status: response.status }
+    );
+  }
+
+  const deletedUser = await response.json();
+
+  return NextResponse.json(
+    { message: "User deleted successfully", user: deletedUser },
+    { status: 200 }
+  );
 }

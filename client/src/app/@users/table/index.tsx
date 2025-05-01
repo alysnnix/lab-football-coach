@@ -37,7 +37,7 @@ export const Table = ({ users }: Props) => {
               </td>
               <td className="py-6 px-2">{user.posts}</td>
               <td className="py-6 px-2">{user.albums}</td>
-              <Delete />
+              <Delete id={user.id} />
               <td className="py-6 px-2" />
             </tr>
           ))}
