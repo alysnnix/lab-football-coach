@@ -1,6 +1,13 @@
-export function Spinner() {
+import { cn } from "@/lib/utils";
+
+export const Spinner: React.FC<React.ComponentProps<"div">> = ({ ...rest }) => {
   return (
-    <div className="absolute right-0 top-0 bottom-0 flex items-center justify-center">
+    <div
+      {...rest}
+      className={cn(
+        "absolute right-0 top-0 bottom-0 flex items-center justify-center",
+        rest.className
+      )}>
       <svg
         className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-700"
         xmlns="http://www.w3.org/2000/svg"
@@ -22,4 +29,4 @@ export function Spinner() {
       </svg>
     </div>
   );
-}
+};

@@ -3,7 +3,8 @@ import { MoreHorizontalIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
+import { Spinner } from "../shared/spinner";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -71,9 +72,23 @@ function PaginationLink({
         className
       )}
       {...props}
-    />
+    >
+      {props.children}
+      <PendingLink />
+    </Link>
   );
 }
+
+const PendingLink = () => {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+
+  return (
+    <div className="absolute w-full h-full flex items-center justify-center bg-background/50">
+      <Spinner className="relative w-5 h-5 *:m-0 *:p-0" />
+    </div>
+  );
+};
 
 function PaginationPrevious({
   className,
@@ -84,11 +99,12 @@ function PaginationPrevious({
       aria-label="Go to previous page"
       size="default"
       className={cn(
-        "gap-1 p-[11px] sm:pl-2.5 rounded-full border active:scale-90",
+        "gap-1 p-[11px] sm:pl-2.5 rounded-full border active:scale-90 relative",
         className
       )}
       {...props}>
       <span className="hidden sm:block">Anterior</span>
+      <PendingLink />
     </PaginationLink>
   );
 }
@@ -104,6 +120,7 @@ function PaginationNext({
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
       {...props}>
       <span className="hidden sm:block">Próximo</span>
+      <PendingLink />
     </PaginationLink>
   );
 }

@@ -1,14 +1,16 @@
 import { Table } from "./table";
 import { NotUserFound } from "./not-found";
 import { GetUsersResponseDto } from "@/app/api/users/dto";
+import { Search } from "./search";
+import { Pagination } from "./pagination";
 
 interface UserListProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export const Page = async ({ searchParams }: UserListProps) => {
-  const search = searchParams.q;
-  const page = searchParams.page || 1;
+  const search = (await searchParams)?.q;
+  const page = (await searchParams)?.page || 1;
   const limit = 5;
 
   const queryParams = new URLSearchParams();
@@ -45,7 +47,14 @@ export const Page = async ({ searchParams }: UserListProps) => {
     return <NotUserFound />;
   }
 
-  return <Table users={users} />;
+  return (
+    <div className="px-ui-dash py-6 bg-ui-background flex flex-col gap-6">
+      <h2 className="text-2xl text-ui-gray-100">Usuarios</h2>
+      <Search />
+      <Table users={users} />
+      <Pagination pagination={users.pagination} />
+    </div>
+  );
 };
 
 export default Page;

@@ -1,13 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { GetUsersResponseDto } from "@/app/api/users/dto";
-
 import React from "react";
-import { useSearchParams, usePathname } from "next/navigation";
-import { GoToNextPage } from "./next-page";
 import { TotalInfo } from "./total-page";
 import { ChangePage } from "./change-page";
+import { GoToNextPage } from "./next-page";
+import { GetUsersResponseDto } from "@/app/api/users/dto";
+import { useSearchParams, usePathname } from "next/navigation";
 
 type Props = {
   pagination: GetUsersResponseDto["pagination"];
@@ -33,7 +31,7 @@ export const Pagination = ({ pagination }: Props) => {
   );
 
   return (
-    <div className={cn("flex gap-4 relative justify-between items-center")}>
+    <div className="flex gap-4 relative justify-between items-center">
       <TotalInfo total={pagination.totalItems} />
       <ChangePage
         totalPages={totalPages}
