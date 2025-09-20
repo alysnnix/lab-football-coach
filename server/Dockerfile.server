@@ -1,6 +1,5 @@
 FROM ubuntu:22.04
 
-# ... (todas as suas instalações continuam as mesmas) ...
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -19,7 +18,6 @@ RUN apt-get update && \
     libssl-dev \
     lsb-release \
     && rm -rf /var/lib/apt/lists/*
-# ... (instalação do Go, Rust, sqlx-cli, etc. continua a mesma) ...
 
 ENV GO_VERSION=1.22.2
 RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
@@ -38,15 +36,9 @@ COPY . /app
 
 RUN go build -o main cmd/api/main.go
 
-# --- INÍCIO DAS MODIFICAÇÕES ---
-# Copia o script de entrypoint para dentro do contêiner
 COPY entrypoint.sh /app/entrypoint.sh
-# Dá permissão de execução para o script
 RUN chmod +x /app/entrypoint.sh
 
-# Define o nosso script como o ponto de entrada do contêiner
 ENTRYPOINT ["/app/entrypoint.sh"]
-# --- FIM DAS MODIFICAÇÕES ---
 
-# O comando abaixo será passado como argumento para o ENTRYPOINT
 CMD ["./main"]
