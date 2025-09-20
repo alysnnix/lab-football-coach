@@ -1,16 +1,6 @@
 FROM ubuntu:22.04
 
-ENV PORT=8080
-ENV APP_ENV=local
-ENV DB_HOST=localhost
-ENV DB_PORT=54325
-ENV DB_DATABASE=sensedia-challenge-api
-ENV DB_USERNAME=sensedia-challenge-api
-ENV DB_PASSWORD=sensedia-challenge-api
-ENV DSN="host=${DB_HOST} port=${DB_PORT} user=${DB_USERNAME} password=${DB_PASSWORD} dbname=${DB_DATABASE} sslmode=disable timezone=UTC connect_timeout=5"
-
-
-# Update and install basic packages
+# ... (todas as suas instalações continuam as mesmas) ...
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -29,36 +19,34 @@ RUN apt-get update && \
     libssl-dev \
     lsb-release \
     && rm -rf /var/lib/apt/lists/*
+# ... (instalação do Go, Rust, sqlx-cli, etc. continua a mesma) ...
 
-# Instalar Go
 ENV GO_VERSION=1.22.2
 RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
     rm go${GO_VERSION}.linux-amd64.tar.gz
 ENV PATH="/usr/local/go/bin:${PATH}"
 
-# Instalar Rust de forma não interativa
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-# Adicionar o cargo ao PATH
 ENV PATH="/root/.cargo/bin:${PATH}"
-# Instalar sqlx-cli via cargo
-RUN cargo install sqlx-cli
 
-# Instalar dependências Python
+RUN cargo install sqlx-cli
 RUN python3 -m pip install load_dotenv psycopg2
 
-# Set working directory
 WORKDIR /app
-# Copy project files
 COPY . /app
 
 RUN go build -o main cmd/api/main.go
 
-# Copiar o script de entrypoint
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# --- INÍCIO DAS MODIFICAÇÕES ---
+# Copia o script de entrypoint para dentro do contêiner
+COPY entrypoint.sh /app/entrypoint.sh
+# Dá permissão de execução para o script
+RUN chmod +x /app/entrypoint.sh
 
-# Definir entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+# Define o nosso script como o ponto de entrada do contêiner
+ENTRYPOINT ["/app/entrypoint.sh"]
+# --- FIM DAS MODIFICAÇÕES ---
 
+# O comando abaixo será passado como argumento para o ENTRYPOINT
 CMD ["./main"]
