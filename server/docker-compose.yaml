@@ -48,17 +48,5 @@ services:
     ports:
       - "8080:8080"
 
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.client
-    networks:
-      - bright
-    container_name: client
-    ports:
-      - "3000:3000"
-    depends_on:
-      - server
-
 volumes:
   sensedia_challenge_api_data:
