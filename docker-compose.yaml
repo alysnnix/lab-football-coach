@@ -17,7 +17,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "54325:5432" # Expõe a porta 5432 do contêiner para a 54325 da sua máquina
+      - "54325:5432"
     volumes:
       - sensedia_challenge_api_data:/var/lib/postgresql/data
     healthcheck:
@@ -27,7 +27,9 @@ services:
       start_period: 5s
 
   server:
-    build: .
+    build:
+      context: ./server
+      dockerfile: Dockerfile.server
     networks:
       - bright
     container_name: server
@@ -45,6 +47,18 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.client
+    networks:
+      - bright
+    container_name: client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
 
 volumes:
   sensedia_challenge_api_data:
