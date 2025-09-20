@@ -1,17 +1,50 @@
-version: '3.8'
+version: "3.8"
+
+name: lab-football-coach
+
+networks:
+  bright:
+    driver: bridge
 
 services:
-  postgres:
+  db:
     image: postgres:12-alpine
-    container_name: postgres12
+    networks:
+      - bright
+    container_name: database
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - '5432:5432'
+      - "54325:5432" # Expõe a porta 5432 do contêiner para a 54325 da sua máquina
     volumes:
       - sensedia_challenge_api_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+      start_period: 5s
+
+  server:
+    build: .
+    networks:
+      - bright
+    container_name: server
+    environment:
+      PORT: 8080
+      DB_HOST: db
+      DB_PORT: 5432
+      APP_ENV: local
+      DB_USERNAME: sensedia-challenge-api
+      DB_PASSWORD: sensedia-challenge-api
+      DB_DATABASE: sensedia-challenge-api
+      DSN: host=db port=5432 user=sensedia-challenge-api password=sensedia-challenge-api dbname=sensedia-challenge-api sslmode=disable timezone=UTC connect_timeout=5
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
 
 volumes:
   sensedia_challenge_api_data:
