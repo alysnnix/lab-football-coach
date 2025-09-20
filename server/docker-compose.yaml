@@ -28,7 +28,7 @@ services:
 
   server:
     build:
-      context: ./server
+      context: .
       dockerfile: Dockerfile.server
     networks:
       - bright
